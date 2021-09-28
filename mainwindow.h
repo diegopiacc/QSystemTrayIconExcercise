@@ -5,6 +5,8 @@
 
 #include <QSystemTrayIcon>
 #include <QDialog>
+#include <QList>
+#include "dptask.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -28,8 +30,12 @@ public:
     ~MainWindow();
 
 private:
+
     void createActions();
+    void createTaskTable();
     void createTrayIcon();
+
+    QList<DPTask> taskList;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
