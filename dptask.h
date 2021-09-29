@@ -11,11 +11,14 @@ class DPTask
 {
 public:
     DPTask();
-
-    DPTask(const QString &taskName);
     DPTask(const QString &taskName, const int secs);
 
     QString getTaskName();
+
+    int getTaskPeriod();
+    QString getTaskPeriodAsString();
+
+    //virtual bool execute();
 
 private:
 

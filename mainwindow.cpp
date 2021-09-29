@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 
-#include "dptasktablemodel.h"
+#include "dptaskcheckfile.h"
+#include "dptaskoutput.h"
+#include "dptaskparam.h"
 
 #include <QAction>
 #include <QCheckBox>
@@ -26,8 +28,8 @@ MainWindow::MainWindow() : taskList(QList<DPTask> ())
 {
     //
 
-    DPTask T1("Task1", 10);
-    DPTask T2("Task2", 30);
+    DPTaskOutput T1("Task1", 10);
+    DPTaskCheckFile T2("Task2", 30);
 
     this->taskList.append(T1);
     this->taskList.append(T2);
@@ -68,9 +70,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::createTaskTable()
 {
-    QTableWidget *taskTable = new QTableWidget(2,3);
+    QTableWidget *taskTable = new QTableWidget(2,4);
     QStringList labels;
-    labels << tr("Task#") << tr("Task name") << tr("Parameters");
+    labels << tr("Task#") << tr("Task name") << tr("Periodicity") << tr("Parameters");
     taskTable->setHorizontalHeaderLabels(labels);
     taskTable->verticalHeader()->hide();
     taskTable->setShowGrid(true);
@@ -80,9 +82,17 @@ void MainWindow::createTaskTable()
     for( int i=0; i<this->taskList.count(); ++i )
     {
         // taskTable->insertRow(i);
-        QTableWidgetItem *itm = new QTableWidgetItem;
-        itm->setText(this->taskList[i].getTaskName());
-        taskTable->setItem(i, 1, itm);
+        QTableWidgetItem *itm1 = new QTableWidgetItem;
+        itm1->setText(this->taskList[i].getTaskName());
+        taskTable->setItem(i, 1, itm1);
+
+
+        QTableWidgetItem *itm2 = new QTableWidgetItem;
+        itm2->setText(this->taskList[i].getTaskPeriodAsString());
+        taskTable->setItem(i, 2, itm2);
+
+
+
     }
 
 

@@ -1,5 +1,7 @@
 #include "dptask.h"
 
+#include <QDateTime>
+
 DPTask::DPTask()
      : _params(QList<DPTaskParam> ())
 {
@@ -8,16 +10,8 @@ DPTask::DPTask()
 
 }
 
-DPTask::DPTask(const QString & taskName) :
-      _taskName{taskName}
-    , _params(QList<DPTaskParam> ())
-
-{
-    this->_secondsPeriod = 60;
-}
-
 DPTask::DPTask(const QString & taskName, const int secs) :
-    _taskName{taskName}, _secondsPeriod{secs}
+    _taskName(taskName), _secondsPeriod(secs)
   , _params(QList<DPTaskParam> ())
 {
 }
@@ -25,3 +19,14 @@ DPTask::DPTask(const QString & taskName, const int secs) :
 QString DPTask::getTaskName() {
     return this->_taskName;
 }
+
+
+int DPTask::getTaskPeriod() {
+    return this->_secondsPeriod;
+}
+
+QString DPTask::getTaskPeriodAsString() {
+    return QDateTime::fromTime_t(this->_secondsPeriod).toUTC().toString("hh:mm:ss");
+}
+
+
