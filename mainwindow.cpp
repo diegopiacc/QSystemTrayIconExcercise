@@ -3,6 +3,7 @@
 #include "dptaskcheckfile.h"
 #include "dptaskoutput.h"
 #include "dptaskparam.h"
+#include "dptaskexecutor.h"
 
 #include <QAction>
 #include <QCheckBox>
@@ -25,7 +26,7 @@
 
 #include <QDebug>
 
-MainWindow::MainWindow() : taskList(QList<DPTask> ())
+MainWindow::MainWindow() : taskList(QList<DPTask> ()), taskExecutorList(QList<DPTaskExecutor*> ())
 {
     //
 
@@ -36,6 +37,16 @@ MainWindow::MainWindow() : taskList(QList<DPTask> ())
 
     this->taskList.append(T1);
     this->taskList.append(T2);
+
+    DPTaskExecutor *TE1 = new DPTaskExecutor(this);
+    TE1->task = &T1;
+    TE1->taskTimer = new QTimer(this);
+    this->taskExecutorList.append(TE1);
+
+    DPTaskExecutor *TE2 = new DPTaskExecutor(this);
+    TE2->task = &T2;
+    TE2->taskTimer = new QTimer(this);
+    this->taskExecutorList.append(TE2);
 
     qDebug("Task List has been inited as hardcoded values");
 
@@ -68,8 +79,8 @@ MainWindow::MainWindow() : taskList(QList<DPTask> ())
 
 MainWindow::~MainWindow()
 {
-    // fixed tasks, for the sake of exercise
-
+    qDeleteAll(taskExecutorList);
+    taskExecutorList.clear();
 }
 
 void MainWindow::createTaskTable()
@@ -147,12 +158,8 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::initTimers()
 {
-    /*
-    for( int i=0; i<this->taskList.count(); ++i ) {
-        QTimer t(this);
-
-        QObject::connect(t, SIGNAL(timeout()), this, SLOT(this->taskList[i].execute()));
-        t.start(1000*this->taskList[i].getTaskPeriod());
+    for( int i=0; i<this->taskExecutorList.count(); ++i ) {
+        QObject::connect(this->taskExecutorList[i]->taskTimer, SIGNAL(timeout()), this->taskExecutorList[i], SLOT(execute()));
+        this->taskExecutorList[i]->taskTimer->start(10*this->taskList[i].getTaskPeriod());
     }
-    */
 }

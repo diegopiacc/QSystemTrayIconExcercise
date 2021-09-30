@@ -1,11 +1,11 @@
 #ifndef DPTASK_H
 #define DPTASK_H
 
+#include <QObject>
 #include <QList>
 #include <QString>
 
 #include "dptaskparam.h"
-
 
 class DPTask
 {

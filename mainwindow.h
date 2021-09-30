@@ -7,6 +7,7 @@
 #include <QDialog>
 #include <QList>
 #include "dptask.h"
+#include "dptaskexecutor.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -38,6 +39,7 @@ private:
     void initTimers();
 
     QList<DPTask> taskList;
+    QList<DPTaskExecutor*> taskExecutorList;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -46,6 +48,7 @@ private:
     QAction *maximizeAction;
     QAction *restoreAction;
     QAction *quitAction;
+
 
 
 };
