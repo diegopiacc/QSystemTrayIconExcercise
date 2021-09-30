@@ -5,6 +5,11 @@ DPTaskParam::DPTaskParam()
     _value = "TEST";
 }
 
+DPTaskParam::DPTaskParam(const QString &value)
+{
+    _value = value;
+}
+
 QString DPTaskParam::value() const
 {
     return _value;

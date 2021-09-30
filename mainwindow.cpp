@@ -21,6 +21,7 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 #include <QHeaderView>
+#include <QTimer>
 
 #include <QDebug>
 
@@ -29,7 +30,9 @@ MainWindow::MainWindow() : taskList(QList<DPTask> ())
     //
 
     DPTaskOutput T1("Task1", 10);
+    T1.addParam("TestString");
     DPTaskCheckFile T2("Task2", 30);
+    T2.addParam("/esempio.txt");
 
     this->taskList.append(T1);
     this->taskList.append(T2);
@@ -42,7 +45,8 @@ MainWindow::MainWindow() : taskList(QList<DPTask> ())
     createTrayIcon();
     createTaskTable();
 
-
+    //
+    initTimers();
 
 
 
@@ -59,7 +63,7 @@ MainWindow::MainWindow() : taskList(QList<DPTask> ())
     trayIcon->show();
 
     setWindowTitle(tr("QSystemTrayIcon Exercise"));
-    resize(400, 300);
+    resize(600, 300);
 }
 
 MainWindow::~MainWindow()
@@ -82,16 +86,24 @@ void MainWindow::createTaskTable()
     for( int i=0; i<this->taskList.count(); ++i )
     {
         // taskTable->insertRow(i);
+        QTableWidgetItem *itm0 = new QTableWidgetItem;
+        itm0->setText(QString::number(i));
+        itm0->setFlags(itm0->flags() ^ Qt::ItemIsEditable);
+        taskTable->setItem(i, 0, itm0);
+
         QTableWidgetItem *itm1 = new QTableWidgetItem;
         itm1->setText(this->taskList[i].getTaskName());
+        itm1->setFlags(itm1->flags() ^ Qt::ItemIsEditable);
         taskTable->setItem(i, 1, itm1);
-
 
         QTableWidgetItem *itm2 = new QTableWidgetItem;
         itm2->setText(this->taskList[i].getTaskPeriodAsString());
+        itm2->setFlags(itm2->flags() ^ Qt::ItemIsEditable);
         taskTable->setItem(i, 2, itm2);
 
-
+        QTableWidgetItem *itm3 = new QTableWidgetItem;
+        itm3->setText(this->taskList[i].getTaskParametersAsString());
+        taskTable->setItem(i, 3, itm3);
 
     }
 
@@ -131,4 +143,16 @@ void MainWindow::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/images/taskicon.png"));
     trayIcon->setContextMenu(trayIconMenu);
+}
+
+void MainWindow::initTimers()
+{
+    /*
+    for( int i=0; i<this->taskList.count(); ++i ) {
+        QTimer t(this);
+
+        QObject::connect(t, SIGNAL(timeout()), this, SLOT(this->taskList[i].execute()));
+        t.start(1000*this->taskList[i].getTaskPeriod());
+    }
+    */
 }

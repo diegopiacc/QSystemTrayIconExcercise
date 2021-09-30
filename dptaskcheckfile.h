@@ -9,7 +9,7 @@ public:
     DPTaskCheckFile();
     DPTaskCheckFile(const QString &taskName, const int secs);
 
-    bool execute();
+    void execute();
 };
 
 #endif // DPTASKPARAMCHECKFILE_H

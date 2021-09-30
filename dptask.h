@@ -9,18 +9,34 @@
 
 class DPTask
 {
+
 public:
     DPTask();
     DPTask(const QString &taskName, const int secs);
+    ~DPTask();
 
     QString getTaskName();
 
     int getTaskPeriod();
+
+    /**
+     * @brief getTaskPeriodAsString
+     * @return
+     */
     QString getTaskPeriodAsString();
 
-    //virtual bool execute();
 
-private:
+    void addParam(QString str);
+
+    /**
+     * @brief getTaskParametersAsString :
+     * @return a QString representation of this task parameters
+     */
+    QString getTaskParametersAsString();
+
+    virtual void execute();
+
+protected:
 
     /**
      * @brief _taskName : Human readable name of the task
@@ -33,9 +49,10 @@ private:
     int _secondsPeriod;
 
     /**
-     * @brief params : customizable, extra parameters (task dependant)
+     * @brief params : customizable, extra parameters (as of v0.1, simplified)
      */
     QList<DPTaskParam> _params;
+
 
 };
 

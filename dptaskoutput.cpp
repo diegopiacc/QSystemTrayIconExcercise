@@ -1,20 +1,20 @@
 #include "dptaskoutput.h"
 
-DPTaskOutput::DPTaskOutput()
-{
+#include <QDebug>
+#include <QDate>
 
+DPTaskOutput::DPTaskOutput() : DPTask()
+{
 }
 
 DPTaskOutput::DPTaskOutput(const QString &taskName, const int secs) : DPTask(taskName, secs)
 {
-
 }
 
 
-bool DPTaskOutput::execute()
+void DPTaskOutput::execute()
 {
-    bool ok = true;
-
-
-    return ok;
+    qDebug() << "Task: " << this->getTaskName();
+    qDebug() << "Date: " << QDate::currentDate();
+    qDebug() << "Date: " << this->getTaskParametersAsString();
 }

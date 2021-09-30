@@ -35,6 +35,8 @@ private:
     void createTaskTable();
     void createTrayIcon();
 
+    void initTimers();
+
     QList<DPTask> taskList;
 
     QSystemTrayIcon *trayIcon;

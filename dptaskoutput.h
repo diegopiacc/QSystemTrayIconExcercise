@@ -14,7 +14,7 @@ public:
     DPTaskOutput();
     DPTaskOutput(const QString &taskName, const int secs);
 
-    bool execute();
+    void execute();
 };
 
 #endif // DPTASKPARAMOUTPUT_H
