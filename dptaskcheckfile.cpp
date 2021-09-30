@@ -15,7 +15,6 @@ DPTaskCheckFile::DPTaskCheckFile(const QString &taskName, const int secs) : DPTa
 void DPTaskCheckFile::execute()
 {
     qDebug() << "Task: " << this->getTaskName();
-    qDebug() << "Date: " << QDate::currentDate();
     if(this->_params.count() < 1) {
         qDebug() << " Could not find expected parameter!";
         return;

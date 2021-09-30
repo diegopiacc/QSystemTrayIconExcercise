@@ -15,6 +15,5 @@ DPTaskOutput::DPTaskOutput(const QString &taskName, const int secs) : DPTask(tas
 void DPTaskOutput::execute()
 {
     qDebug() << "Task: " << this->getTaskName();
-    qDebug() << "Date: " << QDate::currentDate();
-    qDebug() << "Date: " << this->getTaskParametersAsString();
+    qDebug() << this->getTaskParametersAsString();
 }

@@ -18,20 +18,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     dptask.cpp \
     dptaskcheckfile.cpp \
-    dptaskexecutor.cpp \
     dptaskoutput.cpp \
     dptaskparam.cpp \
-    dptasktablemodel.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     dptask.h \
     dptaskcheckfile.h \
-    dptaskexecutor.h \
     dptaskoutput.h \
     dptaskparam.h \
-    dptasktablemodel.h \
     mainwindow.h
 
 FORMS +=

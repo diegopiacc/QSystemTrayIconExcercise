@@ -3,7 +3,6 @@
 #include "dptaskcheckfile.h"
 #include "dptaskoutput.h"
 #include "dptaskparam.h"
-#include "dptaskexecutor.h"
 
 #include <QAction>
 #include <QCheckBox>
@@ -26,27 +25,24 @@
 
 #include <QDebug>
 
-MainWindow::MainWindow() : taskList(QList<DPTask> ()), taskExecutorList(QList<DPTaskExecutor*> ())
+MainWindow::MainWindow() : taskList(QList<DPTask*> ()), timerList(QList<QTimer*> ()) // , taskExecutorList(QList<DPTaskExecutor*> ())
 {
     //
 
-    DPTaskOutput T1("Task1", 10);
-    T1.addParam("TestString");
-    DPTaskCheckFile T2("Task2", 30);
-    T2.addParam("/esempio.txt");
+    DPTaskOutput *T1 = new DPTaskOutput("Task1", 10);
+    T1->addParam("TestString");
+    DPTaskCheckFile *T2 = new DPTaskCheckFile("Task2", 30);
+    T2->addParam("/esempio.txt");
 
     this->taskList.append(T1);
     this->taskList.append(T2);
 
-    DPTaskExecutor *TE1 = new DPTaskExecutor(this);
-    TE1->task = &T1;
-    TE1->taskTimer = new QTimer(this);
-    this->taskExecutorList.append(TE1);
+    QTimer* taskTimer1 = new QTimer(this);
+    QTimer* taskTimer2 = new QTimer(this);
 
-    DPTaskExecutor *TE2 = new DPTaskExecutor(this);
-    TE2->task = &T2;
-    TE2->taskTimer = new QTimer(this);
-    this->taskExecutorList.append(TE2);
+    this->timerList.append(taskTimer1);
+    this->timerList.append(taskTimer2);
+
 
     qDebug("Task List has been inited as hardcoded values");
 
@@ -79,13 +75,15 @@ MainWindow::MainWindow() : taskList(QList<DPTask> ()), taskExecutorList(QList<DP
 
 MainWindow::~MainWindow()
 {
+    /*
     qDeleteAll(taskExecutorList);
     taskExecutorList.clear();
+    */
 }
 
 void MainWindow::createTaskTable()
 {
-    QTableWidget *taskTable = new QTableWidget(2,4);
+    taskTable = new QTableWidget(2,4);
     QStringList labels;
     labels << tr("Task#") << tr("Task name") << tr("Periodicity") << tr("Parameters");
     taskTable->setHorizontalHeaderLabels(labels);
@@ -103,20 +101,23 @@ void MainWindow::createTaskTable()
         taskTable->setItem(i, 0, itm0);
 
         QTableWidgetItem *itm1 = new QTableWidgetItem;
-        itm1->setText(this->taskList[i].getTaskName());
+        itm1->setText(this->taskList[i]->getTaskName());
         itm1->setFlags(itm1->flags() ^ Qt::ItemIsEditable);
         taskTable->setItem(i, 1, itm1);
 
         QTableWidgetItem *itm2 = new QTableWidgetItem;
-        itm2->setText(this->taskList[i].getTaskPeriodAsString());
+        itm2->setText(this->taskList[i]->getTaskPeriodAsString());
         itm2->setFlags(itm2->flags() ^ Qt::ItemIsEditable);
         taskTable->setItem(i, 2, itm2);
 
         QTableWidgetItem *itm3 = new QTableWidgetItem;
-        itm3->setText(this->taskList[i].getTaskParametersAsString());
+        itm3->setText(this->taskList[i]->getTaskParametersAsString());
         taskTable->setItem(i, 3, itm3);
 
     }
+
+    QObject::connect(taskTable, SIGNAL(cellChanged(int, int)), this, SLOT(cellChanged(int, int)));
+
 
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -156,10 +157,48 @@ void MainWindow::createTrayIcon()
     trayIcon->setContextMenu(trayIconMenu);
 }
 
+/**
+ * @brief MainWindow::initTimers
+ * Initialize a list of Timers for the tasks managed by this object; could be improved
+ * by creating a TaskExecutor object/TaskExecutors QList
+ *
+ */
 void MainWindow::initTimers()
 {
+
+    QObject::connect(this->timerList[0], SIGNAL(timeout()), this, SLOT(executeTimer1()));
+    QObject::connect(this->timerList[1], SIGNAL(timeout()), this, SLOT(executeTimer2()));
+
+    this->timerList[0]->start(1000*this->taskList[0]->getTaskPeriod());
+    this->timerList[1]->start(1000*this->taskList[1]->getTaskPeriod());
+
+    /*
     for( int i=0; i<this->taskExecutorList.count(); ++i ) {
         QObject::connect(this->taskExecutorList[i]->taskTimer, SIGNAL(timeout()), this->taskExecutorList[i], SLOT(execute()));
         this->taskExecutorList[i]->taskTimer->start(10*this->taskList[i].getTaskPeriod());
     }
+    */
 }
+
+void MainWindow::executeTimer1()
+{
+    DPTaskOutput* t = (DPTaskOutput*)this->taskList[0];
+    t->execute();
+}
+
+void MainWindow::executeTimer2()
+{
+    DPTaskCheckFile* t = (DPTaskCheckFile*)this->taskList[1];
+    t->execute();
+}
+
+void MainWindow::cellChanged(int r, int c)
+{
+    QString newval = taskTable->item(r, c)->text();
+    if(c==3) {
+        this->taskList[r]->resetParam(newval);
+    } else {
+        qDebug() << "How did you manage to edit THIS?" << r << c;
+    }
+}
+

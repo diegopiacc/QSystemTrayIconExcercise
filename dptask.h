@@ -25,7 +25,16 @@ public:
      */
     QString getTaskPeriodAsString();
 
+    /**
+     * @brief resetParam : Reinitialize the param list (yes, I know, for now it' only a String) qith a single string.
+     * @param str : the string.
+     */
+    void resetParam(QString str);
 
+    /**
+     * @brief addParam : Add a parameter to the task. What for? God knows.
+     * @param str
+     */
     void addParam(QString str);
 
     /**

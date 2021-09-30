@@ -7,7 +7,6 @@
 #include <QDialog>
 #include <QList>
 #include "dptask.h"
-#include "dptaskexecutor.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -20,6 +19,8 @@ class QMenu;
 class QPushButton;
 class QSpinBox;
 class QTextEdit;
+class QTimer;
+class QTableWidget;
 QT_END_NAMESPACE
 
 class MainWindow : public QDialog
@@ -38,8 +39,10 @@ private:
 
     void initTimers();
 
-    QList<DPTask> taskList;
-    QList<DPTaskExecutor*> taskExecutorList;
+    QList<DPTask*> taskList;
+    QList<QTimer*> timerList;
+    // QList<DPTaskExecutor*> taskExecutorList;
+
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -49,7 +52,14 @@ private:
     QAction *restoreAction;
     QAction *quitAction;
 
+private:
+    QTableWidget *taskTable;
 
+private slots:
+    void executeTimer1();
+    void executeTimer2();
+
+    void cellChanged(int r, int c);
 
 };
 #endif // MAINWINDOW_H

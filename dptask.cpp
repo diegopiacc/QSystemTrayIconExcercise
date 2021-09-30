@@ -34,6 +34,13 @@ QString DPTask::getTaskPeriodAsString() {
     return QDateTime::fromTime_t(this->_secondsPeriod).toUTC().toString("hh:mm:ss");
 }
 
+void DPTask::resetParam(QString str)
+{
+    this->_params.clear();
+    DPTaskParam p(str);
+    this->_params.append(p);
+}
+
 void DPTask::addParam(QString str)
 {
     DPTaskParam p(str);
@@ -59,5 +66,3 @@ void DPTask::execute()
 {
     qDebug() << "DPTask - generic virtual execute";
 }
-
-
